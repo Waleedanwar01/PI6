@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load blog_extras %}
+
+{% block title %}{{ title|default:"Blog" }} - {{ site_config.site_name }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-[#0055ff] to-[#0033aa] text-white py-16 md:py-20 relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-blue-300 blur-3xl"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">{{ title }}</h1>
+        {% if current_category %}
+        <p class="text-xl text-blue-100 max-w-2xl mx-auto">{{ current_category.description }}</p>
+        {% else %}
+        <p class="text-xl text-blue-100 max-w-2xl mx-auto">Latest insights, guides, and news from our experts.</p>
+        {% endif %}
+        <div class="h-1 w-24 bg-[#ffcc00] mx-auto rounded-none mt-6"></div>
+    </div>
+</div>
+
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Main Content: Blog Grid -->
+            <div class="lg:w-3/4">
+                
+                {% if current_category and current_category.subcategories.all %}
+                <!-- Subcategories grid removed as per user request -->
+                {% endif %}
+
+                {% if page_obj %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for post in page_obj %}
+                        <article class="bg-white rounded-none shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
+                            {% if post.featured_image %}
+                            <a href="{% url 'blog_detail' post.slug %}" class="block h-48 overflow-hidden relative group">
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'blog_detail' post.slug %}" class="block h-48 overflow-hidden relative group">
+                                <img src="{{ post.id|get_random_image }}" alt="Insurance" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 grayscale opacity-80 hover:grayscale-0 hover:opacity-100">
+                                <div class="absolute inset-0 bg-brand-blue bg-opacity-10"></div>
+                            </a>
+                            {% endif %}
+                            
+                            <div class="p-6 flex flex-col flex-grow">
+                                <div class="mb-3 flex items-center text-xs text-gray-500 font-medium uppercase tracking-wider">
+                                    {% if post.category %}
+                                    <a href="{% url 'blog_category_list' post.category.slug %}" class="text-brand-blue hover:underline">{{ post.category.name }}</a>
+                                    {% else %}
+                                    <span>Uncategorized</span>
+                                    {% endif %}
+                                    <span class="mx-2">•</span>
+                                    <span>{{ post.published_at|date:"M d, Y" }}</span>
+                                </div>
+                                
+                                <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-brand-blue transition-colors">
+                                    <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                                </h2>
+                                
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+                                    {{ post.excerpt|default:post.content|striptags|truncatewords:20 }}
+                                </p>
+                                
+                                <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-brand-blue font-semibold text-sm hover:underline mt-auto">
+                                    Read Article 
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </a>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if page_obj.has_other_pages %}
+                    <div class="mt-12 flex justify-center">
+                        <nav class="flex items-center space-x-2">
+                            {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 rounded-none bg-white border border-gray-300 text-gray-700 hover:bg-[#ffcc00] hover:text-gray-900">Previous</a>
+                            {% endif %}
+                            
+                            <span class="px-3 py-2 text-gray-500">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            
+                            {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 rounded-none bg-white border border-gray-300 text-gray-700 hover:bg-[#ffcc00] hover:text-gray-900">Next</a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                    {% endif %}
+
+                {% else %}
+                    {% if not current_category or not current_category.subcategories.all %}
+                    <div class="bg-white rounded-none shadow-sm p-12 text-center">
+                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">No articles found</h3>
+                        <p class="text-gray-500">We couldn't find any articles in this section yet. Check back soon!</p>
+                        <a href="{% url 'blog_list' %}" class="inline-block mt-6 px-6 py-2 bg-brand-blue text-white rounded-none hover:bg-[#ffcc00] hover:text-gray-900 transition-colors">View All Articles</a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:w-1/4 space-y-8">
+                <!-- Categories Widget -->
+                <div class="bg-white rounded-none shadow-sm p-6 border border-gray-100 sticky top-24">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Categories</h3>
+                    
+                    <div id="categories-wrapper" class="relative overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 320px;">
+                        <ul class="space-y-1 pb-8">
+                            <li class="mb-2">
+                                <a href="{% url 'blog_list' %}" class="flex items-center justify-between group p-2 rounded-none hover:bg-gray-50 transition-colors {% if not current_category %}bg-blue-50 text-brand-blue font-bold{% endif %}">
+                                    <span class="{% if not current_category %}text-brand-blue{% else %}text-gray-700{% endif %} group-hover:text-brand-blue transition-colors">All Articles</span>
+                                </a>
+                            </li>
+                            {% for cat in categories %}
+                            <li class="group/parent">
+                                <a href="{% url 'blog_category_list' cat.slug %}" class="flex items-center justify-between p-2 rounded-none hover:bg-gray-50 transition-colors {% if current_category.id == cat.id or current_category.parent.id == cat.id %}bg-blue-50 text-brand-blue font-bold{% endif %}">
+                                    <span class="{% if current_category.id == cat.id or current_category.parent.id == cat.id %}text-brand-blue{% else %}text-gray-700{% endif %} group-hover/parent:text-brand-blue transition-colors">{{ cat.name }}</span>
+                                    <span class="text-xs bg-gray-100 text-gray-500 py-0.5 px-2 rounded-none group-hover/parent:bg-blue-100 group-hover/parent:text-blue-600 transition-colors">{{ cat.posts.count }}</span>
+                                </a>
+                                
+                                <!-- Subcategories -->
+                                {% if cat.subcategories.all %}
+                                <ul class="ml-4 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
+                                    {% for sub in cat.subcategories.all %}
+                                    <li>
+                                        <a href="{% url 'blog_category_list' sub.slug %}" class="flex items-center justify-between group/child p-1.5 rounded-none hover:bg-gray-50 transition-colors {% if current_category.id == sub.id %}text-brand-blue font-bold{% endif %}">
+                                            <span class="text-sm {% if current_category.id == sub.id %}text-brand-blue{% else %}text-gray-600{% endif %} group-hover/child:text-brand-blue transition-colors">{{ sub.name }}</span>
+                                            <span class="text-[10px] bg-gray-50 text-gray-400 py-0.5 px-1.5 rounded-none group-hover/child:bg-blue-50 group-hover/child:text-blue-600 transition-colors">{{ sub.posts.count }}</span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <!-- Blur Overlay -->
+                        <div id="categories-overlay" class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
+                    </div>
+
+                    <!-- View More Button -->
+                    <button id="view-more-categories" class="w-full mt-4 text-center text-sm font-bold text-brand-blue hover:text-[#ffcc00] uppercase tracking-wide focus:outline-none transition-colors hidden group">
+                        <span class="group-hover:translate-y-0.5 transition-transform inline-block">View More Categories &darr;</span>
+                    </button>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const wrapper = document.getElementById('categories-wrapper');
+                            const overlay = document.getElementById('categories-overlay');
+                            const btn = document.getElementById('view-more-categories');
+                            const maxHeight = 320; 
+                            
+                            // Check if content is taller than max height
+                            if (wrapper.scrollHeight > maxHeight) {
+                                btn.classList.remove('hidden');
+                            } else {
+                                overlay.classList.add('hidden');
+                                wrapper.style.maxHeight = 'none';
+                            }
+                            
+                            btn.addEventListener('click', function() {
+                                // Set explicit height for transition
+                                wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+                                overlay.style.opacity = '0';
+                                btn.style.opacity = '0';
+                                
+                                setTimeout(() => {
+                                    overlay.classList.add('hidden');
+                                    btn.classList.add('hidden');
+                                    wrapper.style.maxHeight = 'none'; // Allow full expansion
+                                }, 500);
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

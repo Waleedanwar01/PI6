@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if step == 'address' %}
+<section class="relative bg-gradient-to-br from-[#0055ff] to-[#0033aa] pt-28 pb-20 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-30">
+        <img src="https://picsum.photos/1920/1080?random=1" alt="" class="w-full h-full object-cover">
+    </div>
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">Compare {% if product == 'auto' %}Auto{% else %}Insurance{% endif %} Quotes</h1>
+            <p class="text-blue-100 text-lg md:text-xl mb-10">Fast, clean, and responsive — find the best rates from top carriers</p>
+            <div class="max-w-3xl mx-auto bg-white/10 p-2 rounded-none">
+                <form method="post" action="{% if product == 'auto' %}{% url 'start_auto' %}{% else %}{% url 'start' %}{% endif %}?step=address">
+                    {% csrf_token %}
+                    <div class="flex flex-col md:flex-row items-stretch gap-3 bg-white p-4">
+                        <input type="text" name="address" placeholder="Enter your address" class="flex-1 px-5 py-3 text-gray-800 border border-gray-200 focus:ring-2 focus:ring-[#ffcc00] focus:border-[#ffcc00] outline-none" value="{{ wizard.address|default:'' }}">
+                        <button type="submit" class="inline-flex items-center justify-center px-6 py-3 bg-[#0033aa] hover:bg-[#0055ff] text-white font-bold tracking-wide transition-colors">
+                            Next Step
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="mt-14">
+            <div class="border-t border-white/30"></div>
+                <div class="text-center mt-8">
+                    <p class="text-blue-100 uppercase text-xs tracking-widest mb-6">We Compare Top Insurers — You Save</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
+                        {% for brand in brands %}
+                            {% if brand.logo %}
+                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none">
+                                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-8 w-auto object-contain filter grayscale hover:grayscale-0 transition">
+                            </a>
+                            {% else %}
+                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none text-sm font-bold">
+                                {{ brand.name }}
+                            </a>
+                            {% endif %}
+                        {% empty %}
+                        <div class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100">
+                            <span class="text-sm">Add brands in Admin</span>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if step != 'address' %}
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-xl mx-auto bg-white border border-gray-100 shadow-sm p-6">
+            <div class="mb-6 flex items-center justify-center gap-2 text-xs">
+                <span class="px-2 py-1 border border-gray-200 {% if step == 'address' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Address</span>
+                <span class="px-2 py-1 border border-gray-200 {% if step == 'name' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Name</span>
+                <span class="px-2 py-1 border border-gray-200 {% if step == 'email' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Email</span>
+                <span class="px-2 py-1 border border-gray-200 {% if step == 'phone' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Phone</span>
+                <span class="px-2 py-1 border border-gray-200 {% if step == 'quotes' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Quotes</span>
+            </div>
+            <div class="mb-4">
+                <img src="https://picsum.photos/800/200?random=2" alt="Wizard banner" class="w-full h-24 object-cover rounded-none border border-gray-100">
+            </div>
+            {% if step == 'name' %}
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">Let’s Get Some Great Rates</h2>
+                    <p class="text-gray-600">Enter your name</p>
+                </div>
+                <form method="post" action="{% if product == 'auto' %}{% url 'start_auto' %}{% else %}{% url 'start' %}{% endif %}?step=name">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 gap-3">
+                        <input type="text" name="first_name" placeholder="First Name" value="{{ wizard.first_name|default:'' }}" class="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#ffcc00] focus:border-[#ffcc00] outline-none">
+                        <input type="text" name="last_name" placeholder="Last Name" value="{{ wizard.last_name|default:'' }}" class="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#ffcc00] focus:border-[#ffcc00] outline-none">
+                        <button type="submit" class="px-6 py-3 bg-[#0033aa] hover:bg-[#0055ff] text-white font-bold tracking-wide transition-colors">Next Step</button>
+                    </div>
+                </form>
+            {% elif step == 'email' %}
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">Your Email Address?</h2>
+                </div>
+                <form method="post" action="{% if product == 'auto' %}{% url 'start_auto' %}{% else %}{% url 'start' %}{% endif %}?step=email">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 gap-3">
+                        <input type="email" name="email" placeholder="email@example.com" value="{{ wizard.email|default:'' }}" class="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#ffcc00] focus:border-[#ffcc00] outline-none">
+                        <button type="submit" class="px-6 py-3 bg-[#0033aa] hover:bg-[#0055ff] text-white font-bold tracking-wide transition-colors">Next Step</button>
+                    </div>
+                </form>
+            {% elif step == 'phone' %}
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">Your Phone Number</h2>
+                </div>
+                <form method="post" action="{% if product == 'auto' %}{% url 'start_auto' %}{% else %}{% url 'start' %}{% endif %}?step=phone">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 gap-3">
+                        <input type="tel" name="phone" placeholder="(555) 123-4567" value="{{ wizard.phone|default:'' }}" class="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#ffcc00] focus:border-[#ffcc00] outline-none">
+                        <p class="text-xs text-gray-500">By clicking View My Quotes you agree to our terms and consent policy.</p>
+                        <button type="submit" class="px-6 py-3 bg-[#0033aa] hover:bg-[#0055ff] text-white font-bold tracking-wide transition-colors">View My Quotes</button>
+                    </div>
+                </form>
+            {% elif step == 'quotes' %}
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Your Quotes</h2>
+                    <p class="text-gray-600">Preview of offers</p>
+                </div>
+                {% if offers %}
+                <div class="space-y-6">
+                    {% for offer in offers %}
+                    <div class="bg-white border border-gray-100 shadow-sm rounded-none overflow-hidden">
+                        <div class="relative h-32 overflow-hidden">
+                            <img src="https://picsum.photos/800/300?random={{ forloop.counter|add:100 }}" alt="{{ offer.title }}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-2">
+                                        {% for b in offer.brands.all %}
+                                            {% if b.logo %}
+                                                <img src="{{ b.logo.url }}" alt="{{ b.name }}" class="h-8 w-auto object-contain bg-white p-1 rounded">
+                                            {% else %}
+                                                <span class="text-xs font-bold text-white bg-black/50 px-2 py-1 rounded">{{ b.name }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <h3 class="text-lg font-bold text-white">{{ offer.title }}</h3>
+                                </div>
+                                {% if offer.highlight %}
+                                <span class="px-3 py-1 text-xs font-bold bg-[#ffcc00] text-gray-900">{{ offer.highlight }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                            <div>
+                                <div class="text-xs text-gray-500">Monthly Premium</div>
+                                <div class="text-3xl font-extrabold text-gray-900">{{ offer.premium }}</div>
+                            </div>
+                            <div class="md:col-span-2 flex items-center justify-end gap-3">
+                                {% if offer.phone %}
+                                    <a href="tel:{{ offer.phone }}" class="px-4 py-2 bg-[#0033aa] text-white hover:bg-[#0055ff] font-semibold">Call {{ offer.phone }}</a>
+                                {% endif %}
+                                {% if offer.cta_url %}
+                                    <a href="{{ offer.cta_url }}" target="_blank" class="px-4 py-2 bg-[#0088ff] text-white hover:bg-[#0066cc] font-semibold">{{ offer.cta_text }}</a>
+                                {% else %}
+                                    <span class="px-4 py-2 bg-[#0088ff] text-white font-semibold">{{ offer.cta_text }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if offer.notes %}
+                        <div class="px-4 pb-4 text-xs text-gray-500">{{ offer.notes }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {% if site_config.wizard_final_screenshot_url %}
+                        <img src="{{ site_config.wizard_final_screenshot_url }}" alt="Quotes Screenshot" class="w-full border border-gray-200">
+                    {% else %}
+                        <img src="https://picsum.photos/1200/800?random=3" alt="Quotes Screenshot" class="w-full border border-gray-200">
+                    {% endif %}
+                {% endif %}
+                <div class="text-center mt-4">
+                    {% if site_config.site_phone %}
+                    <p class="text-sm text-gray-600">Call an Expert <a href="tel:{{ site_config.site_phone }}" class="font-bold text-brand-blue hover:underline">{{ site_config.site_phone }}</a></p>
+                    {% endif %}
+                    <form method="post" action="{% if product == 'auto' %}{% url 'start_auto' %}{% else %}{% url 'start' %}{% endif %}?step=reset" class="mt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 bg-gray-800 text-white hover:bg-gray-700">Start Over</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if step == 'address' %}
+<section class="py-20 bg-[#eaf4ff]">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div class="text-center lg:text-left">
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Join our Happy Shoppers</h3>
+                <p class="text-gray-700 text-lg mb-4">"I bundled my home and auto. I saved about $650 compared to my other insurance company."</p>
+                <p class="text-gray-500">Clina, 43 — Houston, TX</p>
+                <p class="text-gray-500">Home Insurance customer</p>
+            </div>
+            <div class="w-full">
+                <img src="https://picsum.photos/800/400?random=4" alt="Banner image" class="w-full h-[280px] md:h-[360px] object-cover rounded-none shadow">
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if step == 'address' %}
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <img src="https://picsum.photos/1200/600?random=5" alt="Design image" class="w-full border border-gray-200 shadow-sm">
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

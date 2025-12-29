@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Compare Texas Insurance Companies - {{ site_config.site_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-gradient-to-br from-[#0055ff] to-[#0033aa] text-white py-16 md:py-20 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-blue-300 blur-3xl"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Compare Texas Insurance Companies</h1>
+        <p class="text-xl text-blue-100 max-w-2xl mx-auto">Browse companies and read articles related to each brand.</p>
+        <div class="h-1 w-24 bg-[#ffcc00] mx-auto rounded-none mt-6"></div>
+    </div>
+    <div class="mt-10"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="bg-white/10 text-white px-4 py-3 text-sm font-bold inline-block">We Compare Top Insurers — You Save</div>
+    </div>
+</section>
+
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        {% if brands %}
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">Companies</h2>
+            <p class="text-gray-600">All active insurer brands ranked.</p>
+        </div>
+        <div class="overflow-x-auto bg-white border border-gray-100 shadow-sm rounded-none">
+            <table class="min-w-full text-left">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="px-6 py-3 font-bold text-sm">Ranking</th>
+                        <th class="px-6 py-3 font-bold text-sm">Company</th>
+                        <th class="px-6 py-3 font-bold text-sm">Complaint Score</th>
+                        <th class="px-6 py-3 font-bold text-sm">Rating</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for brand in brands %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-3 font-semibold">{{ brand.ranking|default:"—" }}</td>
+                        <td class="px-6 py-3">
+                            <a href="{% url 'company_blogs' brand.id %}" class="text-brand-blue hover:underline font-semibold">
+                                {{ brand.name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-3">
+                            {% if brand.complaint_score %}{{ brand.complaint_score }}{% else %}—{% endif %}
+                        </td>
+                        <td class="px-6 py-3">
+                            {% if brand.rating %}
+                                {% for star in "12345"|make_list %}
+                                    {% if forloop.counter <= brand.rating %}
+                                        <span class="text-yellow-400">★</span>
+                                    {% else %}
+                                        <span class="text-gray-300">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-gray-300">★★★★★</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if company_subcategories %}
+        <div class="text-center mb-8 mt-12">
+            <h2 class="text-2xl font-bold text-gray-900">Browse by Category</h2>
+            <p class="text-gray-600">Companies organized under the Companies category.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {% for sub in company_subcategories %}
+            <a href="{% url 'companies' %}?category={{ sub.slug }}" class="group block p-4 bg-white border border-gray-100 hover:border-brand-light-blue/30 shadow-sm hover:shadow-xl transition-all rounded-none text-center">
+                <h3 class="text-sm font-bold text-gray-900 mb-1 group-hover:text-brand-blue">{{ sub.name }}</h3>
+                {% if sub.description %}
+                <p class="text-xs text-gray-600 line-clamp-2">{{ sub.description }}</p>
+                {% else %}
+                <p class="text-xs text-gray-500">View articles</p>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="bg-white rounded-none shadow-sm p-12 text-center border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No companies found</h3>
+            <p class="text-gray-500">Create a 'companies' category with subcategories, or add Insurer Brands in admin.</p>
+        </div>
+        {% endif %}
+    </div>
+    </section>
+{% if page_obj %}
+<section class="bg-white py-12 border-t border-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">{{ selected_title }} Blogs</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in page_obj %}
+            <article class="bg-white rounded-none shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
+                {% if post.featured_image %}
+                <a href="{% url 'blog_detail' post.slug %}" class="block h-48 overflow-hidden relative group">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
+                </a>
+                {% endif %}
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="mb-3 flex items-center text-xs text-gray-500 font-medium uppercase tracking-wider">
+                        {% if post.category %}
+                        <a href="{% url 'blog_category_list' post.category.slug %}" class="text-brand-blue hover:underline">{{ post.category.name }}</a>
+                        {% else %}
+                        <span>Uncategorized</span>
+                        {% endif %}
+                        <span class="mx-2">•</span>
+                        <span>{{ post.published_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-brand-blue transition-colors">
+                        <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                    </h2>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+                        {{ post.excerpt|default:post.content|striptags|truncatewords:20 }}
+                    </p>
+                    <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-brand-blue font-semibold text-sm hover:underline mt-auto">
+                        Read Article 
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_other_pages %}
+        <div class="mt-12 flex justify-center">
+            <nav class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                <a href="?{{ base_query }}&page={{ page_obj.previous_page_number }}" class="px-3 py-2 rounded-none bg-white border border-gray-300 text-gray-700 hover:bg-[#ffcc00] hover:text-gray-900">Previous</a>
+                {% endif %}
+                <span class="px-3 py-2 text-gray-500">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                <a href="?{{ base_query }}&page={{ page_obj.next_page_number }}" class="px-3 py-2 rounded-none bg-white border border-gray-300 text-gray-700 hover:bg-[#ffcc00] hover:text-gray-900">Next</a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
