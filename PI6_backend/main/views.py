@@ -34,7 +34,7 @@ def page_detail(request, slug):
     return render(request, 'page_detail.html', {'page': page})
 
 def blog_list(request):
-    posts_list = BlogPost.objects.filter(is_published=True).order_by('-published_at')
+    posts_list = BlogPost.objects.filter(is_published=True).select_related('category').order_by('-published_at')
     # Get only top-level categories and prefetch subcategories
     categories = BlogCategory.objects.filter(parent__isnull=True).prefetch_related('subcategories')
     
@@ -58,7 +58,7 @@ def blog_category_list(request, category_slug):
     posts_list = BlogPost.objects.filter(
         is_published=True, 
         category__id__in=category_ids
-    ).order_by('-published_at')
+    ).select_related('category').order_by('-published_at')
     
     # Get only top-level categories and prefetch subcategories for sidebar
     categories = BlogCategory.objects.filter(parent__isnull=True).prefetch_related('subcategories')
@@ -81,12 +81,12 @@ def blog_detail(request, slug):
     same_category_posts = BlogPost.objects.filter(
         category=post.category, 
         is_published=True
-    ).exclude(id=post.id).order_by('-published_at')
+    ).exclude(id=post.id).select_related('category').order_by('-published_at')
     
     # 2. Secondary Strategy: Other Categories (Recent)
     other_posts = BlogPost.objects.filter(
         is_published=True
-    ).exclude(id=post.id).exclude(category=post.category).order_by('-published_at')
+    ).exclude(id=post.id).exclude(category=post.category).select_related('category').order_by('-published_at')
     
     # Combine results
     # We want up to 8 posts total (3 for cards, 5 for links)
@@ -259,7 +259,7 @@ def company_blogs(request, brand_id):
     brand = get_object_or_404(InsurerBrand, id=brand_id)
     posts_list = BlogPost.objects.filter(
         is_published=True
-    ).filter(
+    ).select_related('category').filter(
         Q(title__icontains=brand.name) | Q(content__icontains=brand.name)
     ).order_by('-published_at')
     categories = BlogCategory.objects.filter(parent__isnull=True).prefetch_related('subcategories')

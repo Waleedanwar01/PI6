@@ -111,7 +111,7 @@
                                     </div>
                                     
                                     <ul class="space-y-1">
-                                        {% for post in category.get_family_posts %}
+                                        {% for post in category.family_posts %}
                                         <li>
                                             <a href="{% url 'blog_detail' post.slug %}" class="block group/item p-2 hover:bg-[#ffcc00] hover:text-gray-900 rounded-none transition-colors duration-200">
                                                 <span class="block text-gray-800 text-sm font-medium group-hover/item:text-gray-900 line-clamp-2 leading-snug">{{ post.title }}</span>
@@ -176,7 +176,7 @@
                             <div id="mobile-dropdown-{{ category.slug }}" class="max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-in-out bg-gray-50">
                                 <div class="pl-4 border-l-4 border-brand-blue ml-4 mr-4 my-2">
                                     <ul class="space-y-2 py-3">
-                                        {% for post in category.get_family_posts %}
+                                        {% for post in category.family_posts %}
                                         <li>
                                             <a href="{% url 'blog_detail' post.slug %}" class="block p-2 text-sm text-gray-600 hover:text-brand-blue hover:bg-gray-100 transition-colors rounded-none">
                                                 {{ post.title }}
