@@ -1,0 +1,9 @@
+version: 1
+services:
+  - type: web
+    name: pi6
+    env: python
+    buildCommand: pip install -r requirments/requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate && gunicorn PI6_backend.wsgi:application
+    autoDeploy: true
+    healthCheckPath: /api/health
