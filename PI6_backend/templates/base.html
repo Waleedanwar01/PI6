@@ -8,10 +8,6 @@
     <meta name="description" content="{% block meta_description %}{{ site_config.home_page_description|default:'Compare Texas Insurance Rates for Home, Auto, and Renters.' }}{% endblock %}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'logo/favicon.png' %}">
-    <!-- Google Fonts: Libre Franklin -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=typography,aspect-ratio"></script>
     <script>
@@ -24,7 +20,21 @@
                         'brand-light-blue': '#0088ff',
                     },
                     fontFamily: {
-                        sans: ['"Libre Franklin"', 'sans-serif'],
+                        sans: [
+                            'ui-sans-serif',
+                            'system-ui',
+                            '-apple-system',
+                            'Segoe UI',
+                            'Roboto',
+                            'Noto Sans',
+                            'Ubuntu',
+                            'Cantarell',
+                            'Helvetica Neue',
+                            'Arial',
+                            'Apple Color Emoji',
+                            'Segoe UI Emoji',
+                            'Segoe UI Symbol'
+                        ],
                     },
                     typography: {
                         DEFAULT: {
@@ -68,9 +78,6 @@
             }
         }
     </script>
-    <style>
-        body { font-family: 'Libre Franklin', sans-serif; }
-    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="font-sans bg-gray-50 flex flex-col min-h-screen overflow-x-hidden">

@@ -23,6 +23,17 @@ def site_config(request):
             navbar_qs = BlogCategory.objects.filter(show_in_navbar=True, parent__isnull=True).prefetch_related('subcategories')
             navbar_categories = list(navbar_qs)
             cache.set('navbar_categories', navbar_categories, 300)
+        for c in navbar_categories:
+            if c.has_dropdown:
+                key = f'navbar_posts_{c.slug}'
+                posts = cache.get(key)
+                if posts is None:
+                    try:
+                        posts = list(c.get_family_posts())
+                    except Exception:
+                        posts = []
+                    cache.set(key, posts, 300)
+                c.family_posts = posts
     except Exception:
         navbar_categories = []
 
