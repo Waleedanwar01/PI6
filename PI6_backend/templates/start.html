@@ -35,8 +35,8 @@
                                 <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-8 w-auto object-contain filter grayscale hover:grayscale-0 transition">
                             </a>
                             {% else %}
-                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none">
-                                <img src="{{ brand.id|get_auto_image }}" alt="{{ brand.name }}" class="h-12 w-auto object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition">
+                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none text-sm font-bold">
+                                {{ brand.name }}
                             </a>
                             {% endif %}
                         {% empty %}
@@ -119,7 +119,7 @@
                                             {% if b.logo %}
                                                 <img src="{{ b.logo.url }}" alt="{{ b.name }}" class="h-8 w-auto object-contain bg-white p-1 rounded">
                                             {% else %}
-                                                <img src="{{ b.id|get_auto_image }}" alt="{{ b.name }}" class="h-8 w-auto object-cover bg-white p-1 rounded grayscale opacity-80 hover:grayscale-0 hover:opacity-100">
+                                                <span class="text-xs font-bold text-white bg-black/50 px-2 py-1 rounded">{{ b.name }}</span>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
