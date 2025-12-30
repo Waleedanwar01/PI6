@@ -8,7 +8,10 @@ from .forms import ContactForm
 
 # Create your views here.
 def home(request):
-    featured_categories = BlogCategory.objects.filter(is_featured_on_home=True).order_by('home_sort_order', 'id')[:3]
+    try:
+        featured_categories = BlogCategory.objects.filter(is_featured_on_home=True).order_by('home_sort_order', 'id')[:3]
+    except Exception:
+        featured_categories = []
     try:
         brands_qs = InsurerBrand.objects.filter(is_active=True, show_on_home=True, ranking__gt=0)
         brands = sorted(list(brands_qs), key=lambda b: (b.ranking or 999999, b.name.lower()))
