@@ -267,4 +267,4 @@ def api_health(request):
         count = InsurerBrand.objects.count()
         return JsonResponse({'db': 'ok', 'brands_count': count})
     except Exception:
-        return JsonResponse({'db': 'error', 'brands_count': 0}, status=503)
+        return JsonResponse({'db': 'error', 'brands_count': 0})

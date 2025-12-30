@@ -4,6 +4,6 @@ services:
     name: pi6
     env: python
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate && gunicorn PI6_backend.wsgi:application
+    startCommand: python manage.py migrate && gunicorn PI6_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2
     autoDeploy: true
     healthCheckPath: /api/health
