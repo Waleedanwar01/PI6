@@ -98,14 +98,7 @@ WSGI_APPLICATION = 'PI6_backend.wsgi.application'
 
 db_url = os.getenv("DATABASE_URL")
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-elif db_url:
+if db_url:
     tmpPostgres = urlparse(db_url)
     DATABASES = {
         'default': {
