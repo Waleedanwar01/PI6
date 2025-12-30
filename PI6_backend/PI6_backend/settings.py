@@ -14,6 +14,7 @@ import os
 from dotenv import load_dotenv
 from urllib.parse import urlparse, parse_qsl
 from pathlib import Path
+from datetime import timedelta
 
 load_dotenv(override=True)
 
@@ -109,6 +110,7 @@ if db_url:
             'HOST': tmpPostgres.hostname,
             'PORT': 5432,
             'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+            'CONN_MAX_AGE': 300,
         }
     }
 else:
@@ -118,6 +120,15 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+# Caching
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'pi6-cache',
+        'TIMEOUT': 300,
+    }
+}
 
 
 # Password validation

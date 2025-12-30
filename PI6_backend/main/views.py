@@ -3,18 +3,28 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Q
+from django.core.cache import cache
 from .models import Page, BlogPost, BlogCategory, InsurerBrand, QuoteOffer
 from .forms import ContactForm
 
 # Create your views here.
 def home(request):
+    featured_categories = cache.get('home_featured_categories')
+    if featured_categories is None:
+        try:
+            featured_categories = list(
+                BlogCategory.objects.filter(is_featured_on_home=True)
+                .order_by('home_sort_order', 'id')[:3]
+            )
+        except Exception:
+            featured_categories = []
+        cache.set('home_featured_categories', featured_categories, 300)
     try:
-        featured_categories = BlogCategory.objects.filter(is_featured_on_home=True).order_by('home_sort_order', 'id')[:3]
-    except Exception:
-        featured_categories = []
-    try:
-        brands_qs = InsurerBrand.objects.filter(is_active=True, show_on_home=True, ranking__gt=0)
-        brands = sorted(list(brands_qs), key=lambda b: (b.ranking or 999999, b.name.lower()))
+        brands = cache.get('home_brands')
+        if brands is None:
+            brands_qs = InsurerBrand.objects.filter(is_active=True, show_on_home=True, ranking__gt=0)
+            brands = sorted(list(brands_qs), key=lambda b: (b.ranking or 999999, b.name.lower()))
+            cache.set('home_brands', brands, 300)
     except Exception:
         brands = []
     return render(request, 'home.html', {'featured_categories': featured_categories, 'brands': brands})
