@@ -5,7 +5,7 @@
 {% if step == 'address' %}
 <section class="relative bg-gradient-to-br from-[#0055ff] to-[#0033aa] pt-28 pb-20 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-30">
-        <img src="{% static 'images/hero_bg.svg' %}" alt="" class="w-full h-full object-cover">
+        <img src="https://picsum.photos/1920/1080?random=1" alt="" class="w-full h-full object-cover">
     </div>
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto text-center relative z-10">
@@ -62,7 +62,7 @@
                 <span class="px-2 py-1 border border-gray-200 {% if step == 'quotes' %}bg-[#ffcc00] text-gray-900 font-bold{% endif %}">Quotes</span>
             </div>
             <div class="mb-4">
-                <img src="{% static 'images/banner.svg' %}" alt="Wizard banner" class="w-full h-24 object-cover rounded-none border border-gray-100">
+                <img src="https://picsum.photos/400/100?random=2" alt="Wizard banner" class="w-full h-24 object-cover rounded-none border border-gray-100">
             </div>
             {% if step == 'name' %}
                 <div class="text-center mb-4">
@@ -110,7 +110,7 @@
                     {% for offer in offers %}
                     <div class="bg-white border border-gray-100 shadow-sm rounded-none overflow-hidden">
                         <div class="relative h-32 overflow-hidden">
-                            <img src="{% static 'images/banner.svg' %}" alt="{{ offer.title }}" class="w-full h-full object-cover">
+                            <img src="https://picsum.photos/800/200?random=3" alt="{{ offer.title }}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
@@ -156,7 +156,7 @@
                     {% if site_config.wizard_final_screenshot_url %}
                         <img src="{{ site_config.wizard_final_screenshot_url }}" alt="Quotes Screenshot" class="w-full border border-gray-200">
                     {% else %}
-                        <img src="{% static 'images/banner.svg' %}" alt="Quotes Screenshot" class="w-full border border-gray-200">
+                        <img src="https://picsum.photos/800/400?random=6" alt="Quotes Screenshot" class="w-full border border-gray-200">
                     {% endif %}
                 {% endif %}
                 <div class="text-center mt-4">
@@ -184,7 +184,7 @@
                 <p class="text-gray-500">Home Insurance customer</p>
             </div>
             <div class="w-full">
-                <img src="{% static 'images/banner.svg' %}" alt="Banner image" class="w-full h-[280px] md:h-[360px] object-cover rounded-none shadow">
+                <img src="https://picsum.photos/600/360?random=4" alt="Banner image" class="w-full h-[280px] md:h-[360px] object-cover rounded-none shadow">
             </div>
         </div>
     </div>
@@ -194,7 +194,7 @@
 <section class="py-12 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
-            <img src="{% static 'images/design.svg' %}" alt="Design image" class="w-full border border-gray-200 shadow-sm">
+            <img src="https://picsum.photos/1200/400?random=5" alt="Design image" class="w-full border border-gray-200 shadow-sm">
         </div>
     </div>
 </section>
