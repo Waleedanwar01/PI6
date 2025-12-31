@@ -57,29 +57,28 @@
                 </div>
             </a>
         </div>
-    </div>
-</div>
 
-<div class="bg-gray-50 pt-24 pb-16">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-8">
-            <p class="text-blue-600 uppercase text-xs tracking-widest mb-6">We Compare Top Insurers — You Save</p>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
-                {% for brand in brands %}
-                    {% if brand.logo %}
-                    <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none">
-                        <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-8 w-auto object-contain filter grayscale hover:grayscale-0 transition">
-                    </a>
-                    {% else %}
-                    <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none text-sm font-bold">
-                        {{ brand.name }}
-                    </a>
-                    {% endif %}
-                {% empty %}
-                    <div class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100">
-                        <span class="text-sm">Add brands in Admin</span>
-                    </div>
-                {% endfor %}
+        <div class="mt-14">
+            <div class="border-t border-white/30"></div>
+                <div class="text-center mt-8">
+                    <p class="text-blue-100 uppercase text-xs tracking-widest mb-6">We Compare Top Insurers — You Save</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
+                        {% for brand in brands %}
+                            {% if brand.logo %}
+                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none">
+                                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-8 w-auto object-contain filter grayscale hover:grayscale-0 transition">
+                            </a>
+                            {% else %}
+                            <a href="{% url 'company_blogs' brand.id %}" class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100 hover:border-[#0055ff]/30 hover:shadow transition-all rounded-none text-sm font-bold">
+                                {{ brand.name }}
+                            </a>
+                            {% endif %}
+                        {% empty %}
+                        <div class="bg-white text-gray-900 px-4 py-3 flex items-center justify-center border border-gray-100">
+                            <span class="text-sm">Add brands in Admin</span>
+                        </div>
+                        {% endfor %}
+                </div>
             </div>
         </div>
     </div>
